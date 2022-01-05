@@ -1,9 +1,10 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const genresAPIController = require('../../controllers/api/genresAPIController');
+const genresAPIController = require("../../controllers/api/genresAPIController");
 
-router.get('/', genresAPIController.list);
-router.get('/:id', genresAPIController.detail);
-router.get('/:id/movies', genresAPIController.genreMovies);
+router.get("/", genresAPIController.list);
+router.get("/:id", genresAPIController.detail);
+router.get("/:id/movies", genresAPIController.genreMovies);
+
 
 module.exports = router;
