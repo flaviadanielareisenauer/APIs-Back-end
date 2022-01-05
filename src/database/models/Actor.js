@@ -6,8 +6,7 @@ module.exports = (sequelize, dataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        // created_at: dataTypes.TIMESTAMP,
-        // updated_at: dataTypes.TIMESTAMP,
+       
         first_name: {
             type: dataTypes.STRING(100),
             allowNull: false
@@ -23,6 +22,7 @@ module.exports = (sequelize, dataTypes) => {
         favorite_movie_id: dataTypes.BIGINT(10).UNSIGNED
     };
     let config = {
+        tableName : 'actors',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -31,7 +31,7 @@ module.exports = (sequelize, dataTypes) => {
     const Actor = sequelize.define(alias, cols, config); 
 
     Actor.associate = function (models) {
-        Actor.belongsToMany(models.Movie, { // models.Movie -> Movies es el valor de alias en movie.js
+        Actor.belongsToMany(models.Movie, { 
             as: "movies",
             through: 'actor_movie',
             foreignKey: 'actor_id',

@@ -7,8 +7,7 @@ module.exports = (sequelize, dataTypes) => {
             allowNull: false,
             autoIncrement: true
         },
-        // created_at: dataTypes.TIMESTAMP,
-        // updated_at: dataTypes.TIMESTAMP,
+       
         title: {
             type: dataTypes.STRING(500),
             allowNull: false
@@ -25,10 +24,14 @@ module.exports = (sequelize, dataTypes) => {
             type: dataTypes.DATEONLY,
             allowNull: false
         },
-        length: dataTypes.BIGINT(10),
-        genre_id: dataTypes.BIGINT(10)
+        length:{
+            type : dataTypes.BIGINT(10)
+        },
+        genre_id: {
+            type : dataTypes.BIGINT(10)}
     };
     let config = {
+        tableName : 'movies',
         timestamps: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
@@ -37,12 +40,12 @@ module.exports = (sequelize, dataTypes) => {
     const Movie = sequelize.define(alias,cols,config);
 
     Movie.associate = function (models) {
-        Movie.belongsTo(models.Genre, { // models.Genre -> Genres es el valor de alias en genres.js
+        Movie.belongsTo(models.Genre, { 
             as: "genre",
             foreignKey: "genre_id"
         })
 
-        Movie.belongsToMany(models.Actor, { // models.Actor -> Actors es el valor de alias en actor.js
+        Movie.belongsToMany(models.Actor, { 
             as: "actors",
             through: 'actor_movie',
             foreignKey: 'movie_id',

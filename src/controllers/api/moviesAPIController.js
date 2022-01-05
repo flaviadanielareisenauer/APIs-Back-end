@@ -4,15 +4,13 @@ const sequelize = db.sequelize;
 const { Op } = require("sequelize");
 const moment = require('moment');
 
-
-//Aqui tienen otra forma de llamar a cada uno de los modelos
 const Movies = db.Movie;
 const Genres = db.Genre;
 const Actors = db.Actor;
 
 
 const moviesAPIController = {
-    'list': (req, res) => {
+    list: (req, res) => {
         db.Movie.findAll({
             include: ['genre']
         })
@@ -21,7 +19,7 @@ const moviesAPIController = {
                 meta: {
                     status : 200,
                     total: movies.length,
-                    url: 'api/movies'
+                    url:`${req.protocol}://${req.get('host')}${req.originalUrl}`
                 },
                 data: movies
             }
@@ -29,7 +27,7 @@ const moviesAPIController = {
             })
     },
     
-    'detail': (req, res) => {
+    detail: (req, res) => {
         db.Movie.findByPk(req.params.id,
             {
                 include : ['genre']
@@ -39,14 +37,14 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: movie.length,
-                        url: '/api/movie/:id'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data: movie
                 }
                 res.json(respuesta);
             });
     },
-    'recomended': (req, res) => {
+    recomended: (req, res) => {
         db.Movie.findAll({
             include: ['genre'],
             where: {
@@ -61,7 +59,7 @@ const moviesAPIController = {
                 meta: {
                     status : 200,
                     total: movies.length,
-                    url: 'api/movies/recomended/:rating'
+                    url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                 },
                 data: movies
             }
@@ -88,7 +86,7 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/create'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }
@@ -97,7 +95,7 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/create'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }
@@ -127,7 +125,7 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/update/:id'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }
@@ -136,7 +134,7 @@ const moviesAPIController = {
                     meta: {
                         status: 204,
                         total: confirm.length,
-                        url: 'api/movies/update/:id'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }
@@ -148,7 +146,7 @@ const moviesAPIController = {
     destroy: (req,res) => {
         let movieId = req.params.id;
         Movies
-        .destroy({where: {id: movieId}, force: true}) // force: true es para asegurar que se ejecute la acción
+        .destroy({where: {id: movieId}, force: true}) 
         .then(confirm => {
             let respuesta;
             if(confirm){
@@ -156,7 +154,7 @@ const moviesAPIController = {
                     meta: {
                         status: 200,
                         total: confirm.length,
-                        url: 'api/movies/destroy/:id'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }
@@ -165,7 +163,7 @@ const moviesAPIController = {
                     meta: {
                         status: 204,
                         total: confirm.length,
-                        url: 'api/movies/destroy/:id'
+                        url : `${req.protocol}://${req.get('host')}${req.originalUrl}`
                     },
                     data:confirm
                 }

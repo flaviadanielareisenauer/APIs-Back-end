@@ -4,16 +4,15 @@ const sequelize = db.sequelize;
 const { Op } = require("sequelize");
 const moment = require('moment');
 const fetch = require('node-fetch');
+const apiKEY = 'c87c9052';
 
-
-//Aqui tienen otra forma de llamar a cada uno de los modelos
 const Movies = db.Movie;
 const Genres = db.Genre;
 const Actors = db.Actor;
 const API = 'http://www.omdbapi.com/?apikey=d4e35e92';
 
 const moviesController = {
-    'list': (req, res) => {
+    list: (req, res) => {
         db.Movie.findAll({
             include: ['genre']
         })
@@ -21,7 +20,7 @@ const moviesController = {
                 res.render('moviesList.ejs', {movies})
             })
     },
-    'detail': (req, res) => {
+    detail: (req, res) => {
         db.Movie.findByPk(req.params.id,
             {
                 include : ['genre']
@@ -30,7 +29,7 @@ const moviesController = {
                 res.render('moviesDetail.ejs', {movie});
             });
     },
-    'new': (req, res) => {
+    new: (req, res) => {
         db.Movie.findAll({
             order : [
                 ['release_date', 'DESC']
@@ -41,7 +40,7 @@ const moviesController = {
                 res.render('newestMovies', {movies});
             });
     },
-    'recomended': (req, res) => {
+    recomended: (req, res) => {
         db.Movie.findAll({
             include: ['genre'],
             where: {
@@ -56,10 +55,17 @@ const moviesController = {
             });
     },
     //Aqui debo modificar para crear la funcionalidad requerida
-    'buscar': (req, res) => {
+    buscar: async (req, res) => {
+        try {
+            const consulta = req.query.titulo;
+            const movie = await fetch(`http://www.omdbapi.com/?t=${consulta}&apikey=${apiKEY}`).then(movie => movie.json())
+            return res.render('moviesDetailOmdb',{movie})
+        } catch (error) {
+            onsole.log(error);
+        }
         
     },
-    //Aqui dispongo las rutas para trabajar con el CRUD
+ 
     add: function (req, res) {
         let promGenres = Genres.findAll();
         let promActors = Actors.findAll();
@@ -128,7 +134,7 @@ const moviesController = {
     destroy: function (req,res) {
         let movieId = req.params.id;
         Movies
-        .destroy({where: {id: movieId}, force: true}) // force: true es para asegurar que se ejecute la acción
+        .destroy({where: {id: movieId}, force: true}) 
         .then(()=>{
             return res.redirect('/movies')})
         .catch(error => res.send(error)) 
